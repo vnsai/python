@@ -1,0 +1,13 @@
+Hospital simulation
+There is staff file(staff.csv) and file for desease cure hours(desease-rate.csv).
+
+Patient signin: takes details of patient and desease
+patient signoff: removes from the patinets list
+staff sign in: add staff to current staff list
+staff sign of: removes staff from current staff  
+staff details: staff in or out staus
+patient details: shows patient token name and desease
+simulation:
+	-> number of hours needed to serve current patients with current staff
+	-> staff needed to complete current patient perticualr hours
+		-> also shows recrutment number if extra need of staff
