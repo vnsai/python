@@ -1,0 +1,393 @@
+Data manipulation programs
+
+We will look at the following data manipulation programs: 
+   cat - concatenate files
+  sort - sort lines of text files
+  uniq - remove duplicate lines from a sorted file
+  diff - find differences between two files
+  echo - display a line of text
+   sed - a Stream EDitor
+    tr - translate or delete characters
+  grep - search for lines in a file matching a pattern
+  head - output the first part of files
+  tail - output the last part of files
+ split - split a file into pieces
+    wc - print the number of bytes, words, and lines in files
+   cut - remove sections from each line of files
+
+For detailed information about these commands type:
+
+   $ man 'command'
+  or    
+   $ info 'command'
+ and 
+   $ 'command' --help
+Additionally, we can use "output redirection" (the '>' symbol) to redirect the output of a program to a file instead of the screen, "append" (the '>>' symbol) to add(append) to files, and "piping" (the '|' symbol) to "pipe" the output of one program into another program. In this way we can combine the functions of more than one program and direct the finally output to a file. 
+cat - concatenate files
+The 'cat' command can be used to combine (concatenate) files into a
+single file. For example consider the following three files:
+
+
+
+   file1.dat      file2.dat       file3.dat
+   ---------      ---------       ---------
+   cake           house           bed 
+   hat            pen             fence
+   pool           fish            tool
+   ten            cake            one 
+   tool                           comb
+
+ The command
+
+   $ cat file1.dat file2.dat file3.dat
+
+ results in the following output:
+
+   cake
+   hat
+   pool
+   ten
+   tool
+   house
+   pen
+   fish
+   cake
+   bed
+   fence
+   tool
+   one
+   comb
+
+ or using output redirection
+
+   $ cat file1.dat file2.dat file3.dat > file4.dat
+
+ the output is stored in file4.dat
+
+sort - sort lines of text files
+The contents of file4.dat can be sorted into alphabetically order
+with the 'sort' command:
+
+   $ sort file4.dat
+   bed
+   cake
+   cake
+   comb
+   fence
+   fish
+   hat
+   house
+   one
+   pen
+   pool
+   ten
+   tool
+   tool
+
+or to redirect the output to 'file5.dat':
+
+   $ sort file4.dat > file5.dat
+
+Note that word 'cake' and 'tool' both appear twice in the list.
+
+If you wish to sort a list into numerical order then use
+the '-n' option. For example sorting the list in file list.dat:
+
+   12
+   3
+   -7
+   14
+
+   $ sort list.dat   (sort into alphabetical order)
+   -7
+   12
+   14
+   3
+
+   $ sort -n list.dat   (sort in numerical order)
+   -7
+   3
+   12
+   14
+
+uniq - remove duplicate lines from a sorted file
+We can now remove duplicate lines from the list:
+
+   $ uniq file5.dat
+   bed
+   cake
+   comb
+   fence
+   fish
+   hat
+   house
+   one
+   pen
+   pool
+   ten
+   tool
+
+or 
+
+   $ uniq file5.dat > file6.dat
+
+Now words 'cake' and 'tool' only appear once in the list.
+
+We can combine two or more commands by using the "pipe" symbol '|;
+for example 
+
+   $ sort file4.dat | uniq > file6.dat
+
+this compound command sorts file4.dat and feeds the output into
+the command 'uniq' which then outputs to file6.dat; it is equivalent to
+
+   $ sort file4.dat > file5.dat
+   $ uniq file5.dat > file6.dat
+
+except file5.dat is not created when piping.
+
+diff - find differences between two files
+We can look at the difference between file5.dat and file6.dat as follows:
+
+   $ diff file5.dat file6.dat 
+   3d2
+   < cake
+   13d11
+   < tool
+
+the output indicates that the files differ by the words 'cake' and 'tool'
+(these word occur twice in file5.dat but only once in file6.dat). 
+
+echo - display a line of text
+If we wish to add a word to file6.dat we can use the echo command as
+follows:
+
+   $ echo dog >> file6.dat
+
+note the '>>' symbol (append), a '>' will overwite the file with the
+single word 'dog'!
+
+and sort it (output to file7.dat):
+
+   $ sort file6.dat > file7.dat
+
+we can view the new file with the cat command:
+
+   $ cat file7.dat
+   bed
+   cake
+   comb
+   dog
+   fence
+   fish
+   hat
+   house
+   one
+   pen
+   pool
+   ten
+   tool
+
+the word 'dog' is now included (between 'comb' and 'fence').
+
+sed - a Stream EDitor
+The command 'sed' provides basic text transformations. Sed has many
+options, here we will use Sed as a utility to replace one word with
+another. The command for this is:
+
+   $ sed "s/old_word/new_word/g" filename
+
+For example we will replace, in file7.dat, the word 'house'
+with the word 'home':
+
+   $ sed "s/house/home/g" file7.dat
+   bed
+   cake
+   comb
+   dog
+   fence
+   fish
+   hat
+   home
+   one
+   pen
+   pool
+   ten
+   tool
+
+or 
+   $ sed "s/house/home/g" file7.dat > file8.dat
+
+to redirect the output to file8.dat.
+
+The word 'house' has been replace with the word 'home',
+we can check the difference between the files as follows:
+
+   $ diff file7.dat file8.dat
+   8c8
+   < house
+   ---
+   > home
+
+tr - translate or delete characters
+The command 'tr' can be used to translates characters to other characters.
+For example if we wish to translate all lowercase characters to upper case
+we issue the command:
+
+   $ cat file8.dat | tr a-z A-Z
+   BED
+   CAKE
+   COMB
+   DOG
+   FENCE
+   FISH
+   HAT
+   HOME
+   ONE
+   PEN
+   POOL
+   TEN
+   TOOL
+   
+Note that the 'tr' command does not operate on a file
+hence we first 'cat' the file and then  pipe the output 
+to the 'tr' program.
+
+The translated output can be stored in file9.txt as follows:
+
+   $ cat file8.dat | tr a-z A-Z > file9.dat
+
+grep - search for lines in a file matching a pattern
+We can search for words in a file using the 'grep' command.
+For example does the word 'home' exist in file9.dat?
+
+   $ grep home file9.dat
+no output is given (no search matches).
+
+   $ grep HOME file9.dat 
+   HOME
+
+the output tells us that the word 'HOME' exists in the file ('grep' is
+case-senistive like most Linux commands). 
+
+Case-sensitivity can be switched off with the '-i' option:
+
+   $ grep -i home file9.dat
+   HOME
+ 
+And the option '-n' gives the line number of the matched word.
+   $ grep -i -n home file9.dat
+   8:HOME
+
+head - output the first part of files
+The command 'head' can be used to output the first "n" lines of a file;
+for example we know that 'HOME' is the 8th line in file9.dat so we can
+output the first 8 lines as follows:
+
+   $ head -n8 file9.dat
+   BED
+   CAKE
+   COMB
+   DOG
+   FENCE
+   FISH
+   HAT
+   HOME 
+
+tail - output the last part of files
+Similarly the command 'tail' can be used to output the last "n" lines of a
+file; for example the five remaining lines after HOME can be output with:
+
+   $ tail -n5 file9.dat
+   ONE
+   PEN
+   POOL
+   TEN
+   TOOL 
+
+We can use 'head' and 'tail' together to output m lines starting from
+line n. For example to list the 8th, 9th and 10th line in file9.dat:
+
+   $ head -n10 file9.dat | tail -n3
+   HOME
+   ONE
+   PEN
+
+or to output the 8th line only:
+
+   $ head -n8 file9.dat | tail -n1
+   HOME
+
+split - split a file into pieces
+The 'split' command can be used to split a file into two files.
+The two new files are called 'xaa' and 'xab'. For example:
+
+   $ split -l8 file9.dat
+   $ cat xaa
+   BED
+   CAKE
+   COMB
+   DOG
+   FENCE
+   FISH
+   HAT
+   HOME
+   $ cat xab
+   ONE
+   PEN 
+   POOL
+   TEN
+   TOOL
+
+wc - print the number of bytes, words, and lines in files
+The command 'wc' outputs the number of bytes, words, and lines,
+in a file. For example:
+
+   $ wc file9.dat
+   13      13      60 file9.dat
+
+   $ wc xaa
+   8       8      38 xaa
+
+   $ wc xab
+   5       5      22 xab
+
+so file9.dat has 13 lines, 13 words, and 60 characters,
+xaa has 8 lines and xab has 5 lines.
+
+cut - remove sections from each line of files
+The command 'cut' can be used to select a column from a file;
+for example the first three characters from each line of file9.dat
+are selected as follows:
+
+   $ cut -b1-3 file9.dat
+   BED
+   CAK
+   COM
+   DOG
+   FEN
+   FIS
+   HAT
+   HOM
+   ONE
+   PEN
+   POO
+   TEN
+   TOO
+
+or characters 2 to 4:
+
+   $ cut -b2-4 file9.dat
+   ED
+   AKE
+   OMB
+   OG
+   ENC
+   ISH
+   AT
+   OME
+   NE
+   EN
+   OOL
+   EN
+   OOL

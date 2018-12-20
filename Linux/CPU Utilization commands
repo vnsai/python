@@ -1,0 +1,63 @@
+when ever a Linux system CPU is occupied by a process, it is unavailable for processing other requests. 
+Rest of pending requests must wait till CPU is free. This becomes a bottleneck in the system.
+Following command will help you to identify CPU utilization,
+so that you can troubleshoot CPU related performance problems on a Linux based system.
+
+Finding CPU utilization is one of the important tasks. Linux comes with various utilities to report CPU utilization.
+1) CPU utilization
+2) Display the utilization of each CPU individually (SMP cpu)
+3) Find out your system’s average CPU utilization since the last system reboot
+4) Determine which process is eating the CPU(s)
+
+Top command to find out Linux cpu usage
+$ top
+
+The top command produces a frequently-updated list of processes. 
+By default, the processes are ordered by percentage of CPU usage, with only the “top” CPU consumers shown.
+The top command shows how much processing power and memory are being used, 
+as well as other information about the running processes.
+
+ ***mpstat and other tools***
+ 
+ Need to install :
+ ------------------------
+ apt-get install sysstat
+ 
+ //if error check this link https://crybit.com/sysstat-sar-on-ubuntu-debian/
+ 
+ Display the utilization of each CPU individually using mpstat
+ 
+ The mpstat command display activities for each available processor, processor 0 being the first one.
+ Global average activities among all processors are also reported. 
+ The mpstat command can be used both on SMP and UP machines,
+ but in the latter, only global average activities will be printed.
+  
+  mpstat -P ALL
+  
+ Report CPU utilization using the sar command
+You can display today's CPU activity, with sar command:
+sar
+
+COMPARISON OF CPU UTILIZATION
+
+sar -u 2 5
+
+-u 12 5 : Report CPU utilization. The following values are displayed:
+%user: Percentage of CPU utilization that occurred while executing at the user level (application).
+%nice: Percentage of CPU utilization that occurred while executing at the user level with nice priority.
+%system: Percentage of CPU utilization that occurred while executing at the system level (kernel).
+%iowait: Percentage of time that the CPU or CPUs were idle during which the system had an outstanding disk I/O request.
+%idle: Percentage of time that the CPU or CPUs were idle and the system did not have an outstanding disk I/O request.
+
+Task: Find out who is monopolizing or eating the CPUs
+Finally, you need to determine which process is monopolizing or eating the CPUs. 
+Following command will displays the top 10 CPU users on the Linux system.
+# ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10
+or 
+# ps -eo pcpu,pid,user,args | sort -r -k1 | less
+
+
+
+
+
+
